@@ -31,7 +31,6 @@ class WebServerOutput(DataOutput):
         self.frame_rate = frame_rate
         self.frame_time = float(1)/self.frame_rate
         self.q = mp.Queue(maxsize=90)
-        # self.q = None
         self.last_image = np.zeros((480, 720, 3))
         fourcc = cv2.VideoWriter_fourcc('M','J','P','G')
         self.video_writer = cv2.VideoWriter('./output/video0.avi', fourcc, FPS, (img_dim[0], img_dim[1]))
@@ -42,13 +41,7 @@ class WebServerOutput(DataOutput):
         imgs = data.get_drown_detection_images()
 
         for i in range(len(imgs)):
-            #if self.q.full():
-                # break
-                #self.q.get()
-            #self.q.put(imgs[i])
             self.video_writer.write(imgs[i])
-
-        # self.video_reader = cv2.VideoCapture('./output/video10.avi')
 
         print('Compute Time: {}s'.format(time.time() - data.enqueue_time))
 
@@ -59,15 +52,6 @@ class WebServerOutput(DataOutput):
         self.q = mp.Queue(maxsize=1000)
 
     def get_frame(self):
-        #print(self.q.qsize())
-        #time.sleep(0.01)
-
-        #while self.q.empty():
-            # print('Spinning')
-            #return self.last_image
-
-        #frame = self.q.get()
-        #self.last_frame = frame
 
         if self.video_reader is None:
             return self.last_image

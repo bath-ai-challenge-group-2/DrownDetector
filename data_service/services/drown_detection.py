@@ -40,7 +40,6 @@ class DrownDetection(DataService):
         for img, xyxy, tracked in data.get_tracked_frames():
 
             for contour in contours:
-                # cv2.fillConvexPoly(img, contour, color=(0, 0, 0))
                 cv2.drawContours(img, [contour], 0, color=(255, 0, 0), thickness=10)
 
             for idx in range(len(tracked)):
@@ -64,8 +63,6 @@ class DrownDetection(DataService):
                     self.drown_risk[tracked[idx].id] = person
 
                 pos_history = tracked[idx].get_pos_history()
-                # diff = np.floor(len(pos_history)/5).astype(np.int)
-                # sub_sampled = pos_history[0::diff]
                 sub_sampled = pos_history[-25::2]
 
                 if np.any(np.isnan(sub_sampled)): continue
@@ -97,7 +94,6 @@ class DrownDetection(DataService):
             self.img_counter += 1
         data.add_drown_detection_images(final_imgs)
         self.enqueue(data)
-        # print('Compute Time here: {}s'.format(time.time() - data.enqueue_time))
 
 
 class DrownRiskProfile:

@@ -25,23 +25,8 @@ class VideoSource(DataSource):
         frame_id = 0
         buffer = FrameBuffer(self.buffer_size, self.frame_size, frame_id)
 
-        # while frame_id < self.frameCount:
-        #     if buffer.is_full():
-        #         print('Saving Buffer')
-        #         self.enqueue(buffer)
-        #         buffer = FrameBuffer(self.buffer_size, self.frame_size, frame_id)
-        #
-        #     ret, img = self.video.read()
-        #
-        #     if ret is False:
-        #         break
-        #
-        #     buffer.add(img)
-        #     frame_id += 1
-
         while True:
             if buffer.is_full():
-                # print('Saving Buffer')
                 buffer.enqueue_time = time.time()
                 self.enqueue(buffer)
                 buffer = FrameBuffer(self.buffer_size, self.frame_size, frame_id)
@@ -56,5 +41,3 @@ class VideoSource(DataSource):
 
             buffer.add(img)
             frame_id += 1
-
-        # self.enqueue(buffer)

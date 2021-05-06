@@ -29,15 +29,12 @@ class AlphaPoseEstimation(DataService):
         self.pose_model.load_state_dict(torch.load('./model_weights/sppe/fast_res50_256x192.pth'))
         self.pose_model.eval()
         self.pose_model.cuda()
-        # # self.pose_model.to(device)
-        # self.pose_model.share_memory()
 
     def _data_ingest(self, data):
         inpts = data.get_pose_inpts()
         inpts = np.concatenate(inpts)
         inpts = torch.from_numpy(inpts).float().cuda()
         inpts /= 255
-        # inpts.to(device)
         with torch.no_grad():
             results = self.pose_model(inpts)
             results.cpu().detach().numpy()
@@ -46,21 +43,3 @@ class AlphaPoseEstimation(DataService):
         self.enqueue(data)
         print('Compute Time: {}s'.format(time.time() - data.enqueue_time))
 
-    # def _data_ingest(self, data):
-    #     inpts = data.get_pose_inpts()
-    #     # inpts = np.concatenate(inpts)
-    #
-    #     res = []
-    #
-    #     for inpt in inpts:
-    #         inp = torch.from_numpy(inpt).float().cuda()
-    #         inp /= 255
-    #         # inpts.to(device)
-    #         with torch.no_grad():
-    #             results = self.pose_model(inp)
-    #             results.cpu().detach().numpy()
-    #             res.append(results)
-    #
-    #     data.add_pose_estimation_predictions(results)
-    #     self.enqueue(data)
-    #     print('Compute Time: {}s'.format(time.time() - data.enqueue_time))

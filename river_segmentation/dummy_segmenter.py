@@ -9,9 +9,7 @@ class DummySegmentation(DangerousSegments):
 
     def __init__(self, width=1920, height=1080, x=300):
         self.img = np.zeros((height, width, 3)).astype('uint8')
-        self.img[:,x:,:] = 255
-
-        # cv2.imshow('hi', self.img)
+        self.img[:, x:, :] = 255
 
         grayImage = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
         contours, _ = cv2.findContours(grayImage, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)

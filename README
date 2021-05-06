@@ -1,0 +1,8 @@
+To run the project execute the drown_detector.py file as you would a regular python file.
+
+Key Requirements
+================
+PyTorch
+Numpy
+Flask
+OpenCV

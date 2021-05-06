@@ -14,7 +14,6 @@ class DataSource:
         self.output_type = output_type
         self.output_buffer = multiprocessing.Queue(maxsize=10)
         self.thread = threading.Thread(target=self.run, args=())
-        # self.thread = multiprocessing.Process(target=self.run, args=())
         self.running = False
 
     def __len__(self):
@@ -29,7 +28,6 @@ class DataSource:
 
     def start(self):
         self.running = True
-        # self.thread.daemon = True
         self.thread.start()
 
     def run(self):

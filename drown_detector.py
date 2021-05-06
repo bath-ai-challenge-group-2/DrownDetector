@@ -31,15 +31,12 @@ if __name__=="__main__":
     # ip_camera = IPCamera(address='tcp://localhost:40001', buffer_size=FPS, img_dim=(480, 720, 3))
     yolo_detection = YoloV5Detection()
     person_extraction = PeopleExtraction()
-    # pose_estimation = AlphaPoseEstimation()
     person_tracker = PeopleTracker(distance_threshold=200)
     drown_detector = DrownDetection(segmentation_map)
 
     pipeline.add_service(video_ingestion)
-    # pipeline.add_service(ip_camera)
     pipeline.add_service(yolo_detection)
     pipeline.add_service(person_extraction)
-    # pipeline.add_service(pose_estimation)
     pipeline.add_service(person_tracker)
     pipeline.add_service(drown_detector)
     pipeline.add_service(camera)
@@ -50,7 +47,6 @@ if __name__=="__main__":
     @app.route('/')
     def index():
         camera.release_video()
-        #return render_template('index.html')
         return {}
 
 

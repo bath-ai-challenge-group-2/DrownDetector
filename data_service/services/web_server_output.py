@@ -6,17 +6,9 @@ import queue
 import numpy as np
 import multiprocessing as mp
 
-from flask import Flask, Response
-from data_utils.torch_utils import img_to_torch
-
-from scipy.spatial.distance import cdist
-from scipy.optimize import curve_fit
-
 from data_service.data_service import DataService
 from data_utils.datatypes import SimpleFIFOBuffer
 from data_models import FrameBuffer, ExtractedPeopleResults
-
-from yolov5_master.utils.plots import plot_one_box
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -41,10 +33,6 @@ class WebServerOutput(DataService):
         imgs = data.get_drown_detection_images()
 
         for i in range(len(imgs)):
-            #if self.q.full():
-                # break
-                #self.q.get()
-            #self.q.put(imgs[i])
             self.video_writer.write(imgs[i])
 
         self.video_reader = cv2.VideoCapture('./output/video.avi')
@@ -55,16 +43,6 @@ class WebServerOutput(DataService):
         self.q = mp.Queue(maxsize=1000)
 
     def get_frame(self):
-        #print(self.q.qsize())
-        #time.sleep(0.01)
-
-        #while self.q.empty():
-            # print('Spinning')
-            #return self.last_image
-
-        #frame = self.q.get()
-        #self.last_frame = frame
-
         if self.video_reader is None:
             return self.last_image
 

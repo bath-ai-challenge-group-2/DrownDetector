@@ -10,7 +10,6 @@ class FrameBuffer:
         self.buffer_length = buffer_length
         self.start_frame_id = start_frame_id
         self.ptr = 0
-        # self.buffer = np.zeros((buffer_length,) + frame_size, dtype=np.uint8)
         self.buffer = [None] * self.buffer_length
 
     def is_full(self):

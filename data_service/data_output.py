@@ -13,7 +13,6 @@ class DataOutput:
     def __init__(self, input_type):
         self.input_type = input_type
         self.thread = threading.Thread(target=self.run, args=())
-        # self.thread = multiprocessing.Process(target=self.run, args=())
         self.running = False
 
     def __len__(self):
@@ -32,22 +31,15 @@ class DataOutput:
 
     def start(self):
         self.running = True
-        # self.thread.daemon = True
         self.thread.start()
 
     def run(self):
-        # print('Running')
         while self.running:
-            # print(self.input_source.qsize())
             if self.input_source.empty():
-                # time.sleep(DataService.POLL_TIMER)
                 continue
 
             data = self.input_source.get()
-            # start_time = time.time()
             self._data_ingest(data)
-            # process_time = time.time() - start_time
-            # print('YOLO Process Time: {}s'.format(process_time))
 
     @abstractmethod
     def _data_ingest(self, data):
