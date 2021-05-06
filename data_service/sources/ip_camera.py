@@ -33,7 +33,7 @@ class IPCamera(DataSource):
     #     self.error_callback = error_callback
     #     self.update_lock = threading.Lock()
 
-    def __init__(self, address='tcp://192.168.0.67:3333', buffer_size=20, img_dim=(1080, 1920, 3)):
+    def __init__(self, address='tcp://localhost:40003', buffer_size=20, img_dim=(1080, 1920, 3)):
         super(IPCamera, self).__init__(IPCamera.output_type)
         self.sock = (
             ffmpeg

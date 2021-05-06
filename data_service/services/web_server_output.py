@@ -26,23 +26,28 @@ class WebServerOutput(DataService):
     input_type = ExtractedPeopleResults
     output_type = ExtractedPeopleResults
 
-    def __init__(self, frame_rate):
+    def __init__(self, frame_rate, FPS=20, img_dim=(640, 480)):
         super(WebServerOutput, self).__init__(WebServerOutput.input_type, WebServerOutput.output_type)
         self.frame_rate = frame_rate
         self.frame_time = float(1)/self.frame_rate
         self.q = mp.Queue(maxsize=90)
         # self.q = None
-        self.last_image = np.zeros((720, 1080, 3))
+        self.last_image = np.zeros((480, 720, 3))
+        self.video_writer = cv2.VideoWriter('./output/video.avi', -1, FPS, (img_dim[0], img_dim[1]))
+        self.video_reader = None
 
     def _data_ingest(self, data):
 
         imgs = data.get_drown_detection_images()
 
         for i in range(len(imgs)):
-            if self.q.full():
+            #if self.q.full():
                 # break
-                self.q.get()
-            self.q.put(imgs[i])
+                #self.q.get()
+            #self.q.put(imgs[i])
+            self.video_writer.write(imgs[i])
+
+        self.video_reader = cv2.VideoCapture('./output/video.avi')
 
         print('Compute Time: {}s'.format(time.time() - data.enqueue_time))
 
@@ -50,11 +55,19 @@ class WebServerOutput(DataService):
         self.q = mp.Queue(maxsize=1000)
 
     def get_frame(self):
-        print(self.q.qsize())
-        time.sleep(0.01)
+        #print(self.q.qsize())
+        #time.sleep(0.01)
 
-        while self.q.empty():
+        #while self.q.empty():
             # print('Spinning')
+            #return self.last_image
+
+        #frame = self.q.get()
+        #self.last_frame = frame
+
+        if self.video_reader is None:
             return self.last_image
 
-        return self.q.get()
+        ret, frame = self.video_reader.read()
+
+        return frame

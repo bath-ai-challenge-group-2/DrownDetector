@@ -40,7 +40,8 @@ class DrownDetection(DataService):
         for img, xyxy, tracked in data.get_tracked_frames():
 
             for contour in contours:
-                cv2.fillConvexPoly(img, contour, color=(0, 0, 0))
+                # cv2.fillConvexPoly(img, contour, color=(0, 0, 0))
+                cv2.drawContours(img, [contour], 0, color=(255, 0, 0), thickness=10)
 
             for idx in range(len(tracked)):
 

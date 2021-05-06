@@ -1,5 +1,6 @@
 from .data_service import DataService
 from .data_source import DataSource
+from .data_output import DataOutput
 
 
 class DataPipeline:
@@ -8,7 +9,7 @@ class DataPipeline:
         self.pipeline = []
 
     def add_service(self, service):
-        assert isinstance(service, DataService) or isinstance(service, DataSource), "All Pipeline services must extend" \
+        assert isinstance(service, DataService) or isinstance(service, DataSource) or isinstance(service, DataOutput), "All Pipeline services must extend" \
                                                                                     "the service base classes!"
 
         if len(self.pipeline) < 1:

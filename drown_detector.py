@@ -6,37 +6,37 @@ import multiprocessing as mp
 from data_service import *
 from data_service.sources import *
 from data_service.services import *
+from data_service.outputs import *
 from river_segmentation import *
 
 from flask import Flask, render_template, Response
 
 
-
-
 if __name__=="__main__":
-    FPS = 25
+    FPS = 30
 
     torch.multiprocessing.set_start_method('spawn')
     mp.set_start_method('spawn', force=True)
 
     app = Flask('MainApp', template_folder='./web_template')
-    camera = WebServerOutput(30)
+    camera = WebServerOutput(30, 30, (1920, 1080))
 
-    segmentation_map = DummySegmentation(x=500)
+    # segmentation_map = DummySegmentation(x=400)
+    segmentation_map = MaskSegmentation('./input_files/5053_mask_image_modified.png')
 
     pipeline = DataPipeline()
 
     # Create Video Ingestion Service
-    # video_ingestion = VideoSource('data/test.mp4', buffer_size=30)
-    ip_camera = IPCamera(buffer_size=FPS, img_dim=(720, 1080, 3))
+    video_ingestion = VideoSource('./input_files/IMG_5053.MOV', buffer_size=30)
+    # ip_camera = IPCamera(address='tcp://localhost:40001', buffer_size=FPS, img_dim=(480, 720, 3))
     yolo_detection = YoloV5Detection()
     person_extraction = PeopleExtraction()
     # pose_estimation = AlphaPoseEstimation()
-    person_tracker = PeopleTracker(distance_threshold=100)
+    person_tracker = PeopleTracker(distance_threshold=200)
     drown_detector = DrownDetection(segmentation_map)
 
-    # pipeline.add_service(video_ingestion)
-    pipeline.add_service(ip_camera)
+    pipeline.add_service(video_ingestion)
+    # pipeline.add_service(ip_camera)
     pipeline.add_service(yolo_detection)
     pipeline.add_service(person_extraction)
     # pipeline.add_service(pose_estimation)
@@ -49,7 +49,9 @@ if __name__=="__main__":
 
     @app.route('/')
     def index():
-        return render_template('index.html')
+        camera.release_video()
+        #return render_template('index.html')
+        return {}
 
 
     def gen(camera):
